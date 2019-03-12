@@ -1,4 +1,4 @@
-NAME=ubuntu-18.04_pcl-1.9.1-misc
+NAME=ubuntu-18.04_pcl-1.9.1_misc
 FULLNAME=m5182107/$(NAME)
 VERSION=latest
 
