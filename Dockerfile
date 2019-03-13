@@ -2,7 +2,7 @@ FROM m5182107/ubuntu-18.04_pcl-1.9.1
 
 MAINTAINER Shoma Kiura <m5182107.s@gmail.com>
 
-RUN apt update -qq && apt install -qq -y \
+RUN apt update && apt install -y --no-install-recommends \
     libopencv-dev \
     libusb-1.0.0-dev \
     libspdlog-dev \
@@ -23,7 +23,8 @@ RUN git clone -b v1.12.1 --depth 1 https://github.com/IntelRealSense/librealsens
     && sed -i -e "25i #include <functional>" ../src/types.h \
     && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ .. \
     && ninja && ninja install && ninja clean \
-    && ldconfig
+    && ldconfig \
+    && cd / && rm -rf /librealsense1
 
 # Build librealsense2.16.1
 RUN git clone -b v2.16.1 --depth 1 https://github.com/IntelRealSense/librealsense.git librealsense2 \
@@ -31,7 +32,8 @@ RUN git clone -b v2.16.1 --depth 1 https://github.com/IntelRealSense/librealsens
     && mkdir build && cd build \
     && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ .. \
     && ninja && ninja install && ninja clean \
-    && ldconfig
+    && ldconfig \
+    && cd / && rm -rf /librealsense2
 
 # fix c++ include library
 RUN sed -i -e "45 s/#include_next/#include/g" /usr/include/c++/7.3.0/cmath \
