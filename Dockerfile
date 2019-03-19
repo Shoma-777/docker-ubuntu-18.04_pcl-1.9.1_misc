@@ -5,9 +5,7 @@ MAINTAINER Shoma Kiura <m5182107.s@gmail.com>
 RUN apt update && apt install -y --no-install-recommends \
     libopencv-dev \
     libusb-1.0.0-dev \
-    libspdlog-dev \
     libyaml-cpp-dev \
-    libfmt-dev \
     libglfw3-dev \
     libssl-dev \
     libgtk-3-dev \
@@ -15,6 +13,15 @@ RUN apt update && apt install -y --no-install-recommends \
     libglu1-mesa-dev \
     xorg-dev \
     && apt clean
+
+# Build fmt 5.3.0
+RUN git clone -b 5.3.0 --depth 1 https://github.com/fmtlib/fmt.git fmt \
+    && cd fmt \
+    && mkdir build&& cd build \
+    && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ .. \
+    && ninja && ninja install && ninja clean \
+    && ldconfig \
+    && cd / && rm -rf /fmt
 
 # Build librealsense1.12.1
 RUN git clone -b v1.12.1 --depth 1 https://github.com/IntelRealSense/librealsense.git librealsense1 \
