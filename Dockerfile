@@ -3,7 +3,6 @@ FROM m5182107/ubuntu-18.04_pcl-1.9.1
 MAINTAINER Shoma Kiura <m5182107.s@gmail.com>
 
 RUN apt update && apt install -y --no-install-recommends \
-    libopencv-dev \
     libusb-1.0.0-dev \
     libyaml-cpp-dev \
     libglfw3-dev \
@@ -18,20 +17,10 @@ RUN apt update && apt install -y --no-install-recommends \
 RUN git clone -b 5.3.0 --depth 1 https://github.com/fmtlib/fmt.git fmt \
     && cd fmt \
     && mkdir build&& cd build \
-    && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ .. \
+    && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -DBUILD_SHARED_LIBS=ON .. \
     && ninja && ninja install && ninja clean \
     && ldconfig \
     && cd / && rm -rf /fmt
-
-# Build librealsense1.12.1
-RUN git clone -b v1.12.1 --depth 1 https://github.com/IntelRealSense/librealsense.git librealsense1 \
-    && cd librealsense1 \
-    && mkdir build && cd build \
-    && sed -i -e "25i #include <functional>" ../src/types.h \
-    && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ .. \
-    && ninja && ninja install && ninja clean \
-    && ldconfig \
-    && cd / && rm -rf /librealsense1
 
 # Build librealsense2.16.1
 RUN git clone -b v2.16.1 --depth 1 https://github.com/IntelRealSense/librealsense.git librealsense2 \
@@ -41,6 +30,16 @@ RUN git clone -b v2.16.1 --depth 1 https://github.com/IntelRealSense/librealsens
     && ninja && ninja install && ninja clean \
     && ldconfig \
     && cd / && rm -rf /librealsense2
+
+# Build opencv 3.4.6
+RUN git clone -b 3.4.6 --depth 1 https://github.com/opencv/opencv.git opencv \
+    && git clone -b 3.4.6 --depth 1 https://github.com/opencv/opencv_contrib.git opencv_contrib \
+    && cd opencv \
+    && mkdir build && cd build \
+    && cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules .. \
+    && ninja && ninja install && ninja clean \
+    && ldconfig \
+    && cd / && rm -rf /opencv /opencv_contrib
 
 # fix c++ include library
 RUN sed -i -e "45 s/#include_next/#include/g" /usr/include/c++/7.3.0/cmath \
