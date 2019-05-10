@@ -6,11 +6,9 @@ RUN apt update && apt install -y --no-install-recommends \
     libusb-1.0.0-dev \
     libyaml-cpp-dev \
     libglfw3-dev \
-    libssl-dev \
     libgtk-3-dev \
     libgl1-mesa-dev \
     libglu1-mesa-dev \
-    xorg-dev \
     && apt clean
 
 # Build fmt 5.3.0
