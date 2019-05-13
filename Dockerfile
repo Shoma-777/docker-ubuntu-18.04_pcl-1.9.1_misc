@@ -40,6 +40,6 @@ RUN git clone -b 3.4.6 --depth 1 https://github.com/opencv/opencv.git opencv \
     && cd / && rm -rf /opencv /opencv_contrib
 
 # fix c++ include library
-RUN sed -i -e "45 s/#include_next/#include/g" /usr/include/c++/7.3.0/cmath \
-    && sed -i -e "38 s/#include_next/#include/g" /usr/include/c++/7.3.0/bits/std_abs.h \
-    && sed -i -e "75 s/#include_next/#include/g" /usr/include/c++/7.3.0/cstdlib
+RUN sed -i -e "45 s/#include_next/#include/g" /usr/include/c++/7.4.0/cmath \
+    && sed -i -e "38 s/#include_next/#include/g" /usr/include/c++/7.4.0/bits/std_abs.h \
+    && sed -i -e "75 s/#include_next/#include/g" /usr/include/c++/7.4.0/cstdlib
